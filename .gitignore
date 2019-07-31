@@ -12,7 +12,6 @@
 /logs
 /feeds
 /feeds.conf
-/files
 /overlay
 /package/feeds
 /package/openwrt-packages
@@ -28,4 +27,4 @@ TAGS*~
 git-src
 .project
 .cproject
-.ccache
+version.date
