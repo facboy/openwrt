@@ -1,6 +1,6 @@
-OpenWrt master r10618-9437012b9e / 2019-07-27 19:40
+OpenWrt master r10941+4-ac31ec0f62 / 2019-09-03 17:22
 ---
-main      2019-07-26 9437012 tools/mklibs: update to 0.1.44 and conver
-luci      2019-07-27 946fc57 Merge pull request #2925 from musashino20
-packages  2019-07-27 2d86369 Merge pull request #9527 from neheb/zstd
-routing   2019-07-22 cb3f9d2 Merge pull request #485 from ecsv/batadv-
+main      2019-09-03 eca1cbf Change scaling to 800mhz (i hope?)
+luci      2019-08-31 2fab0ad Merge pull request #3029 from musashino20
+packages  2019-09-03 f90dfb1 Merge pull request #9773 from 805447391/m
+routing   2019-08-30 ff5100e Merge pull request #507 from aparcar/bmx7
