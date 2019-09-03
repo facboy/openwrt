@@ -16,7 +16,7 @@ getGitInfo() {
 
 BinDir=$PWD/bin/targets/ipq806x/generic
 Device=R7800
-Prefix=openwrt-ipq806x-netgear_r7800
+Prefix=openwrt-ipq806x-generic-netgear_r7800
 Branch=master
 
 VersTime=$Branch-`scripts/getver.sh`-`date +%Y%m%d-%H%M`
@@ -28,7 +28,7 @@ echo process $Branch...
 rm -f $BinDir/$Device-*
 
 # remove unnecessary files
-rm -f $BinDir/*root.img $BinDir/*vmlinux.elf
+rm -f $BinDir/*root.img $BinDir/*vmlinux.elf $BinDir/*initramfs-uImage
 
 # create status info and patches
 echo "$VersTime" > $TFile-status.txt
@@ -49,13 +49,13 @@ sed -i "s/^FILESTAMP=.*/FILESTAMP=$Device-$VersTime/" $TFile-newBuildroot.sh
 
 # cleanup checksum files
 grep -sh $Prefix.*-squashfs $BinDir/md5sums $BinDir/sha256sums \
-  | sed -e 's/$/\r/' -e 's/\*'$Prefix'/'$Device'/' -e 's/squash/sq/' \
+  | sed -e 's/$/\r/' -e 's/\*'$Prefix'/'$Device'/' -e 's/squashfs-//' \
   > $TFile-checksums.txt
 rm -f $BinDir/md5sums $BinDir/sha256sums
 
 # rename manifest and firmware files
 cd $BinDir
 mv *.manifest $Device-$VersTime.manifest
-mv $Prefix-squashfs-sysupgrade.bin $Device-$VersTime-sqfs-sysupgrade.bin
-mv $Prefix-squashfs-factory.img $Device-$VersTime-sqfs-factory.img
+mv $Prefix-squashfs-sysupgrade.bin $Device-$VersTime-sysupgrade.bin
+mv $Prefix-squashfs-factory.img $Device-$VersTime-factory.img
 
