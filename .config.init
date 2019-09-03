@@ -1,7 +1,7 @@
 # Use "make defconfig" to expand this to a full .config
 CONFIG_TARGET_ipq806x=y
-CONFIG_TARGET_ipq806x_DEVICE_netgear_r7800=y
-CONFIG_TARGET_BOARD="ipq806x"
+CONFIG_TARGET_ipq806x_generic=y
+CONFIG_TARGET_ipq806x_generic_DEVICE_netgear_r7800=y
 
 # Per-package build logs in <buildroot>/logs
 CONFIG_DEVEL=y

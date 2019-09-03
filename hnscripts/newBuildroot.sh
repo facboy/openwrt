@@ -19,8 +19,11 @@ FILESTAMP=R7800-master-r10401-63e3c3d2a2-20190706-1607
 sudo apt-get install build-essential subversion libncurses5-dev zlib1g-dev
 sudo apt-get install gawk gcc-multilib flex git-core gettext libssl-dev
 
-### Prerequisite on Ubuntu 17.10 as it has python3 by default
-sudo apt-get install python
+### Prerequisite for 18.06 and 19.07 on on Ubuntu 17.10 as it has python3 by default
+# sudo apt-get install python
+
+### Prerequisite for master on Ubuntu as master needs python3 libs
+sudo apt-get install python3-distutils
 
 ### Prerequisites for being able to send patches to openwrt-devel
 sudo apt-get install git-email
