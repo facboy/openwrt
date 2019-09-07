@@ -10,7 +10,7 @@
  obj-$(CONFIG_APQ_GCC_8084) += gcc-apq8084.o
 --- /dev/null
 +++ b/drivers/clk/qcom/fab_scaling.c
-@@ -0,0 +1,160 @@
+@@ -0,0 +1,156 @@
 +/*
 + * Copyright (c) 2015, The Linux Foundation. All rights reserved.
 + *
@@ -45,7 +45,6 @@
 +static u32 fab_freq_high;
 +static u32 fab_freq_nominal;
 +static u32 cpu_freq_threshold;
-+static u32 fab_cur_freq = 0;
 +
 +static struct clk *apps_fab_clk;
 +static struct clk *ddr_fab_clk;
@@ -62,11 +61,8 @@
 +	else
 +		new_freq = fab_freq_nominal;
 +
-+	if (new_freq != fab_cur_freq) {
-+		clk_set_rate(apps_fab_clk, new_freq);
-+		clk_set_rate(ddr_fab_clk, new_freq);
-+		fab_cur_freq = new_freq;
-+	}
++	clk_set_rate(apps_fab_clk, new_freq);
++	clk_set_rate(ddr_fab_clk, new_freq);
 +
 +	return;
 +}
@@ -173,7 +169,7 @@
 +module_exit(fab_scaling_ipq806x_exit);
 --- a/drivers/cpufreq/cpufreq-dt.c
 +++ b/drivers/cpufreq/cpufreq-dt.c
-@@ -24,9 +24,12 @@
+@@ -24,15 +24,19 @@
  #include <linux/regulator/consumer.h>
  #include <linux/slab.h>
  #include <linux/thermal.h>
@@ -186,68 +182,116 @@
  struct private_data {
  	struct opp_table *opp_table;
  	struct device *cpu_dev;
-@@ -44,9 +47,70 @@ static struct freq_attr *cpufreq_dt_attr
+ 	struct thermal_cooling_device *cdev;
+ 	const char *reg_name;
+ 	bool have_static_opps;
++	struct mutex lock;
+ };
+ 
+ static struct freq_attr *cpufreq_dt_attr[] = {
+@@ -41,12 +47,113 @@ static struct freq_attr *cpufreq_dt_attr
+ 	NULL,
+ };
+ 
++static int set_l2_target(struct cpufreq_policy *policy, unsigned long target_freq, unsigned long max_cpu_freq) {
++	struct clk *l2_clk = policy->l2_clk;
++	struct regulator *l2_regulator = policy->l2_regulator;
++	unsigned int new_l2_freq = 0, new_l2_volt = 0, idle_l2_freq;
++	unsigned long old_l2_freq;
++	int ret = 0, i, tol = 0;
++
++	/* L2 cache supply has a single regulator shared by cores and each core
++	 * registers itself as a regulator consumer. N of consumers = N of cores.
++	 * Regulator driver sets the regulator output to highest voltage requested
++	 * among all consumers. We set the regulator voltage per core and let the
++	 * driver set the highest voltage requested - either core can be running
++	 * at max and l2 cache should get the needed voltage.
++	 */
++	if (policy->l2_volt_set) {
++		for (i = 2; i >= 0; i--) {
++			if (target_freq >= policy->l2_cpufreq[i]) {
++				new_l2_volt = policy->l2_volt[i];
++				tol = new_l2_volt * policy->l2_volt_tol / 100;
++
++				break;
++			}
++		}
++	}
++
++	/* Unlike regulators, clock rate is adjusted on any request. Let's pick
++	 * the highest core frequency and set the L2 cache frequency, so we 
++	 * don't pull the L2 cache frequency down prematurely if either cores is 
++	 * running at max.
++	 */
++	for (i = 2; i >= 0; i--) {
++		if (max_cpu_freq >= policy->l2_cpufreq[i]) {
++			new_l2_freq = policy->l2_rate[i];
++
++			break;
++		}
++	}
++
++	old_l2_freq = clk_get_rate(l2_clk);
++	if (new_l2_freq != old_l2_freq) {
++
++		/* set l2_freq to idle before setting target l2_freq - there seems 
++		 * to be a bug where the l2_freq is not set correctly if it is
++		 * switched directly from a non-idle bin to another.  i think this might be
++		 * related to 
++		 * https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/?id=77612720a2362230af726baa4149c40ec7a7fb05
++		 */
++		idle_l2_freq = policy->l2_rate[0];
++
++		ret = clk_set_rate(l2_clk, idle_l2_freq);
++		if (ret) {
++			goto l2_clk_fail;
++		}
++	}
++
++	/* Scale voltage first - because of reset to idle, this is always scaling up.
++	 * Because the regulators are independent we always set this to the target voltage.
++	 */
++	ret = regulator_set_voltage_tol(l2_regulator,new_l2_volt,tol);
++	if (ret) {
++		goto l2_reg_fail;
++	}
++
++	ret = clk_set_rate(l2_clk, new_l2_freq);
++	if (ret) {
++		goto l2_clk_fail;
++	}
++
++	return ret;
++
++l2_clk_fail:
++	pr_err("failed to scale l2_clk: %d\n", ret);
++	return ret;
++
++l2_reg_fail:
++	pr_err("failed to scale l2_regulator: %d\n", ret);
++	return ret;
++}
++
  static int set_target(struct cpufreq_policy *policy, unsigned int index)
  {
  	struct private_data *priv = policy->driver_data;
-+	struct clk *l2_clk = policy->l2_clk;
-+	struct regulator *l2_regulator = policy->l2_regulator;
 +	unsigned long target_freq = policy->freq_table[index].frequency * 1000;
 +	int ret;
 +	
++	mutex_lock(&priv->lock);
 +	ret = dev_pm_opp_set_rate(priv->cpu_dev, target_freq);
 +
 +	if (!ret) {
-+		unsigned long max_cpu_freq = max(target_freq,
-+						 clk_get_rate(per_cpu(cpu_cores_clks, !policy->cpu)));
++		unsigned long freq, max_cpu_freq = 0;
++		int cpu;
++
++		for_each_possible_cpu(cpu) {
++			freq = clk_get_rate(per_cpu(cpu_cores_clks, cpu));
++			max_cpu_freq = max(max_cpu_freq, freq);
++		}
 +		
 +		if (policy->l2_rate_set) {
-+			unsigned long new_l2_freq = 0, new_l2_volt = 0;
-+			static unsigned long last_l2_freq = 0;
-+			static unsigned long last_l2_volt[2] = {};
-+			int i, tol = 0;
-+
-+			/* Unlike regulators, clock rate is adjusted on any request. Let's pick
-+			 * the highest core frequency and set the L2 cache frequency, so we 
-+			 * don't pull the L2 cache frequency down prematurely if either cores is 
-+			 * running at max.
-+			 */
-+
-+			for (i = 2; i >= 0; i--) {
-+				if (max_cpu_freq >= policy->l2_cpufreq[i]) {
-+					new_l2_freq = policy->l2_rate[i];
-+
-+					if (last_l2_freq != new_l2_freq) {
-+						clk_set_rate(l2_clk, new_l2_freq);
-+						last_l2_freq = new_l2_freq;
-+					}
-+
-+					break;
-+				}
-+			}
-+
-+			/* L2 cache supply has a single regulator shared by cores and each core
-+			 * registers itself as a regulator consumer. N of consumers = N of cores.
-+			 * Regulator driver sets the regulator output to highest voltage requested
-+			 * among all consumers. We set the regulator voltage per core and let the
-+			 * driver set the highest voltage requested - either core can be running
-+			 * at max and l2 cache should get the needed voltage.
-+			 */
-+			if (policy->l2_volt_set) {
-+				for (i = 2; i >= 0; i--) {
-+					if (target_freq >= policy->l2_cpufreq[i]) {
-+						tol = policy->l2_volt[i] * policy->l2_volt_tol / 100;
-+						new_l2_volt = policy->l2_volt[i];
-+
-+						if (last_l2_volt[policy->cpu] != new_l2_volt) {
-+							regulator_set_voltage_tol(l2_regulator,new_l2_volt,tol);
-+							last_l2_volt[policy->cpu] = new_l2_volt;
-+						}
-+
-+						break;
-+					}
-+				}
-+			}
++			ret = set_l2_target(policy, target_freq, max_cpu_freq);
 +		}
 +
 +		scale_fabrics(max_cpu_freq);
@@ -255,6 +299,8 @@
  
 -	return dev_pm_opp_set_rate(priv->cpu_dev,
 -				   policy->freq_table[index].frequency * 1000);
++	mutex_unlock(&priv->lock);
++
 +	return ret;
  }
  
@@ -287,10 +333,12 @@
  	if (IS_ERR(cpu_clk)) {
  		ret = PTR_ERR(cpu_clk);
  		dev_err(cpu_dev, "%s: failed to get clk: %d\n", __func__, ret);
-@@ -281,6 +351,58 @@ static int cpufreq_init(struct cpufreq_p
+@@ -281,6 +351,60 @@ static int cpufreq_init(struct cpufreq_p
  	policy->cpuinfo.transition_latency = transition_latency;
  	policy->dvfs_possible_from_any_cpu = true;
  
++	mutex_init(&priv->lock);
++
 +	l2_clk = devm_clk_get(cpu_dev, "l2");
 +	if (!IS_ERR(l2_clk)) {
 +		policy->l2_clk = l2_clk;
