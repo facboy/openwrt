@@ -16,6 +16,32 @@
 	compatible = "qcom,ipq8064";
 	interrupt-parent = <&intc>;
 
+	cpu0_opp_table: opp_table0 {
+		compatible = "operating-points-v2";
+		opp-shared;
+
+		opp-48000000 {
+			opp-hz = /bits/ 64 <48000000>;
+			opp-microvolt = <1100000>;
+			clock-latency-ns = <256000>;
+		};
+		opp-200000000 {
+			opp-hz = /bits/ 64 <200000000>;
+			opp-microvolt = <1100000>;
+			clock-latency-ns = <256000>;
+		};
+		opp-500000000 {
+			opp-hz = /bits/ 64 <500000000>;
+			opp-microvolt = <1100000>;
+			clock-latency-ns = <256000>;
+		};
+		opp-716000000 {
+			opp-hz = /bits/ 64 <716000000>;
+			opp-microvolt = <1100000>;
+			clock-latency-ns = <256000>;
+		};
+	};	
+
 	cpus {
 		#address-cells = <1>;
 		#size-cells = <0>;
@@ -37,6 +63,7 @@
 			cooling-max-state = <10>;
 			#cooling-cells = <2>;
 			cpu-idle-states = <&CPU_SPC>;
+			operating-points-v2 = <&cpu0_opp_table>;
 		};
 
 		cpu1: cpu@1 {
@@ -55,6 +82,7 @@
 			cooling-max-state = <10>;
 			#cooling-cells = <2>;
 			cpu-idle-states = <&CPU_SPC>;
+			operating-points-v2 = <&cpu0_opp_table>;
 		};
 
 		L2: l2-cache {
