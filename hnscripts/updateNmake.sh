@@ -12,8 +12,8 @@ echo "...install feeds..."
 ./scripts/feeds install -a
 echo "...make defconfig..."
 make defconfig
-echo "...make menuconfig..."
-make menuconfig
+#echo "...make menuconfig..."
+#make menuconfig
 echo "...download new source packages..."
 make download
 echo "...make the firmware..."
