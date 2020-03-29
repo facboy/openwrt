@@ -69,7 +69,7 @@ CONFIG_DROPBEAR_ECC=y
 CONFIG_PACKAGE_block-mount=y
 CONFIG_PACKAGE_kmod-usb-storage=y
 CONFIG_PACKAGE_kmod-fs-cifs=y
-CONFIG_PACKAGE_kmod-fs-exfat=y
+CONFIG_PACKAGE_kmod-fs-exfat0=y
 CONFIG_PACKAGE_libblkid=y
 CONFIG_PACKAGE_kmod-fs-ext4=y
 CONFIG_PACKAGE_kmod-fs-hfsplus=y
@@ -122,8 +122,9 @@ CONFIG_PACKAGE_collectd-mod-uptime=y
 # QoS selection - currently SQM
 CONFIG_PACKAGE_luci-app-sqm=y
 
-# Build luci-theme-material, default is still bootstrap
+# Build material and openwrt-2020 themes, default is still bootstrap
 CONFIG_PACKAGE_luci-theme-material=y
+CONFIG_PACKAGE_luci-theme-openwrt-2020=y
 
 # kernel support for tunnels, VPNs
 CONFIG_PACKAGE_kmod-tun=y

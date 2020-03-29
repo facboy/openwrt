@@ -11,6 +11,7 @@ echo "main      `(git log -1 --format="%cd %h %s" --abbrev=7 --date=short | head
 echo "luci      `(cd feeds/luci && git log -1 --format="%cd %h %s" --abbrev=7 --date=short | cut -b1-60)`" >> $STATUSFILE
 echo "packages  `(cd feeds/packages && git log -1 --format="%cd %h %s" --abbrev=7 --date=short | cut -b1-60)`" >> $STATUSFILE
 echo "routing   `(cd feeds/routing && git log -1 --format="%cd %h %s" --abbrev=7 --date=short | cut -b1-60)`" >> $STATUSFILE
+cat $STATUSFILE
 git add $STATUSFILE
 
 # Override git/svn timestamp after r48583-48594, set initial clock to now
