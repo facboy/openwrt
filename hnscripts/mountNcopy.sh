@@ -24,10 +24,9 @@ cp $BinDir/*patch $Mountpoint
 sleep 1
 cp $BinDir/*sh $Mountpoint
 sleep 1
-cp $BinDir/*manifest $Mountpoint
-sleep 1
 cp $BinDir/*txt $Mountpoint
 sleep 1
-cp $BinDir/*config* $Mountpoint
+cp $BinDir/*config.init $Mountpoint
+cp $BinDir/*config $Mountpoint
 echo done.
 

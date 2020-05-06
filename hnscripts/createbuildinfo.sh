@@ -41,7 +41,7 @@ sed -i -e 's/$/\r/' $TFile-status.txt
 # collect config info
 cp .config $TFile.config
 cp .config.init $TFile.config.init
-scripts/diffconfig.sh > $TFile.diffconfig 2>/dev/null
+scripts/diffconfig.sh > $TFile.diffconfig.txt 2>/dev/null
 
 # copy buildroot creation script and patch timestamp info
 cp hnscripts/newBuildroot.sh $TFile-newBuildroot.sh
@@ -55,7 +55,7 @@ rm -f $BinDir/md5sums $BinDir/sha256sums
 
 # rename manifest and firmware files
 cd $BinDir
-mv *.manifest $Device-$VersTime.manifest
+mv *.manifest $Device-$VersTime.manifest.txt
 mv $Prefix-squashfs-sysupgrade.bin $Device-$VersTime-sysupgrade.bin
 mv $Prefix-squashfs-factory.img $Device-$VersTime-factory.img
 
