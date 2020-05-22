@@ -19,7 +19,7 @@ Device=R7800
 Prefix=openwrt-ipq806x-generic-netgear_r7800
 Branch=master
 
-VersTime=$Branch-`scripts/getver.sh`-`date +%Y%m%d-%H%M`
+VersTime=$Branch-$(scripts/getver.sh)-$(date +%Y%m%d-%H%M)
 TFile=$BinDir/$Device-$VersTime
 
 echo process $Branch...
