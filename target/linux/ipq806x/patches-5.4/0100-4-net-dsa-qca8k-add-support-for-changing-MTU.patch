@@ -1,0 +1,70 @@
+From 8b31f6cd9ace0f01611944b4681db09923e653da Mon Sep 17 00:00:00 2001
+From: Christopher Ng <facboy@gmail.com>
+Date: Thu, 16 Jul 2020 22:21:46 +0100
+Subject: [PATCH] net: dsa: qca8k: add support for changing MTU
+
+---
+ drivers/net/dsa/qca8k.c | 16 ++++++++++++++++
+ drivers/net/dsa/qca8k.h |  2 ++
+ 2 files changed, 18 insertions(+)
+
+diff --git a/drivers/net/dsa/qca8k.c b/drivers/net/dsa/qca8k.c
+index d2b5ab403e06..f84a7fb81213 100644
+--- a/drivers/net/dsa/qca8k.c
++++ b/drivers/net/dsa/qca8k.c
+@@ -16,9 +16,14 @@
+ #include <linux/mdio.h>
+ #include <linux/gpio/consumer.h>
+ #include <linux/etherdevice.h>
++#include <linux/if_vlan.h>
++#include <uapi/linux/if_ether.h>
+ 
+ #include "qca8k.h"
+ 
++/* also defined in net/dsa/tag_qca.c */
++#define QCA_HDR_LEN	2
++
+ #define MIB_DESC(_s, _o, _n)	\
+ 	{			\
+ 		.size = (_s),	\
+@@ -1023,6 +1028,16 @@ qca8k_get_tag_protocol(struct dsa_switch *ds, int port,
+ 	return DSA_TAG_PROTO_QCA;
+ }
+ 
++static int
++qca8k_change_mtu(struct dsa_switch *ds, int port, int mtu)
++{
++	struct qca8k_priv *priv = (struct qca8k_priv *)ds->priv;
++	qca8k_rmw(priv, QCA8K_REG_MAX_FRAME_SIZE,
++		  QCA8K_MAX_FRAME_SIZE_MTU, 
++		  mtu + VLAN_ETH_HLEN + ETH_FCS_LEN + VLAN_HLEN + QCA_HDR_LEN);
++	return 0;
++}
++
+ static const struct dsa_switch_ops qca8k_switch_ops = {
+ 	.get_tag_protocol	= qca8k_get_tag_protocol,
+ 	.setup			= qca8k_setup,
+@@ -1040,6 +1055,7 @@ static const struct dsa_switch_ops qca8k_switch_ops = {
+ 	.port_fdb_add		= qca8k_port_fdb_add,
+ 	.port_fdb_del		= qca8k_port_fdb_del,
+ 	.port_fdb_dump		= qca8k_port_fdb_dump,
++	.port_change_mtu	= qca8k_change_mtu,
+ };
+ 
+ static int
+diff --git a/drivers/net/dsa/qca8k.h b/drivers/net/dsa/qca8k.h
+index 42d6ea24eb14..3e4ef3bbdadc 100644
+--- a/drivers/net/dsa/qca8k.h
++++ b/drivers/net/dsa/qca8k.h
+@@ -56,6 +56,8 @@
+ #define   QCA8K_MDIO_MASTER_MAX_REG			32
+ #define QCA8K_GOL_MAC_ADDR0				0x60
+ #define QCA8K_GOL_MAC_ADDR1				0x64
++#define QCA8K_REG_MAX_FRAME_SIZE			0x078
++#define   QCA8K_MAX_FRAME_SIZE_MTU			GENMASK(13, 0)
+ #define QCA8K_REG_PORT_STATUS(_i)			(0x07c + (_i) * 4)
+ #define   QCA8K_PORT_STATUS_SPEED			GENMASK(1, 0)
+ #define   QCA8K_PORT_STATUS_SPEED_10			0
+-- 
+2.17.1
+
