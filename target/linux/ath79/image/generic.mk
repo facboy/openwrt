@@ -210,6 +210,15 @@ define Device/alfa-network_ap121f
 endef
 TARGET_DEVICES += alfa-network_ap121f
 
+define Device/allnet_all-wap02860ac
+  SOC := qca9558
+  DEVICE_VENDOR := ALLNET
+  DEVICE_MODEL := ALL-WAP02860AC
+  DEVICE_PACKAGES := ath10k-firmware-qca988x-ct kmod-ath10k-ct
+  IMAGE_SIZE := 13120k
+endef
+TARGET_DEVICES += allnet_all-wap02860ac
+
 define Device/arduino_yun
   SOC := ar9331
   DEVICE_VENDOR := Arduino
@@ -367,7 +376,7 @@ define Device/comfast_cf-e110n-v2
   DEVICE_VENDOR := COMFAST
   DEVICE_MODEL := CF-E110N
   DEVICE_VARIANT := v2
-  DEVICE_PACKAGES := rssileds kmod-leds-gpio -swconfig -uboot-envtools
+  DEVICE_PACKAGES := rssileds -swconfig -uboot-envtools
   IMAGE_SIZE := 16192k
 endef
 TARGET_DEVICES += comfast_cf-e110n-v2
@@ -377,7 +386,7 @@ define Device/comfast_cf-e120a-v3
   DEVICE_VENDOR := COMFAST
   DEVICE_MODEL := CF-E120A
   DEVICE_VARIANT := v3
-  DEVICE_PACKAGES := rssileds kmod-leds-gpio -uboot-envtools
+  DEVICE_PACKAGES := rssileds -uboot-envtools
   IMAGE_SIZE := 8000k
 endef
 TARGET_DEVICES += comfast_cf-e120a-v3
@@ -387,7 +396,7 @@ define Device/comfast_cf-e130n-v2
   DEVICE_VENDOR := COMFAST
   DEVICE_MODEL := CF-E130N
   DEVICE_VARIANT := v2
-  DEVICE_PACKAGES := rssileds kmod-leds-gpio -swconfig -uboot-envtools
+  DEVICE_PACKAGES := rssileds -swconfig -uboot-envtools
   IMAGE_SIZE := 7936k
 endef
 TARGET_DEVICES += comfast_cf-e130n-v2
@@ -396,7 +405,7 @@ define Device/comfast_cf-e313ac
   SOC := qca9531
   DEVICE_VENDOR := COMFAST
   DEVICE_MODEL := CF-E313AC
-  DEVICE_PACKAGES := rssileds kmod-leds-gpio kmod-ath10k-ct-smallbuffers \
+  DEVICE_PACKAGES := rssileds kmod-ath10k-ct-smallbuffers \
 	ath10k-firmware-qca9888-ct -swconfig -uboot-envtools
   IMAGE_SIZE := 7936k
 endef
@@ -416,8 +425,8 @@ define Device/comfast_cf-e5
   SOC := qca9531
   DEVICE_VENDOR := COMFAST
   DEVICE_MODEL := CF-E5/E7
-  DEVICE_PACKAGES := rssileds kmod-leds-gpio kmod-usb2 kmod-usb-net \
-	kmod-usb-net-qmi-wwan -swconfig -uboot-envtools
+  DEVICE_PACKAGES := rssileds kmod-usb2 kmod-usb-net-qmi-wwan -swconfig \
+	-uboot-envtools
   IMAGE_SIZE := 16192k
 endef
 TARGET_DEVICES += comfast_cf-e5
@@ -426,8 +435,7 @@ define Device/comfast_cf-e560ac
   SOC := qca9531
   DEVICE_VENDOR := COMFAST
   DEVICE_MODEL := CF-E560AC
-  DEVICE_PACKAGES := kmod-leds-gpio kmod-usb2 kmod-ath10k-ct \
-	ath10k-firmware-qca9888-ct
+  DEVICE_PACKAGES := kmod-usb2 kmod-ath10k-ct ath10k-firmware-qca9888-ct
   IMAGE_SIZE := 16128k
 endef
 TARGET_DEVICES += comfast_cf-e560ac
@@ -501,6 +509,18 @@ define Device/compex_wpj531-16m
   IMAGE/cpximg-7a07.bin := append-kernel | pad-to $$$$(BLOCKSIZE) | append-rootfs | pad-rootfs | mkmylofw_16m 0x693 3
 endef
 TARGET_DEVICES += compex_wpj531-16m
+
+define Device/compex_wpj563
+  SOC := qca9563
+  DEVICE_PACKAGES := kmod-usb2 kmod-usb3
+  IMAGE_SIZE := 16128k
+  DEVICE_VENDOR := Compex
+  DEVICE_MODEL := WPJ563
+  SUPPORTED_DEVICES += wpj563
+  IMAGES += cpximg-7a02.bin
+  IMAGE/cpximg-7a02.bin := append-kernel | pad-to $$$$(BLOCKSIZE) | append-rootfs | pad-rootfs | mkmylofw_16m 0x694 2
+endef
+TARGET_DEVICES += compex_wpj563
 
 define Device/devolo_dvl1200e
   SOC := qca9558
@@ -918,7 +938,7 @@ define Device/iodata_etg3-r
   DEVICE_VENDOR := I-O DATA
   DEVICE_MODEL := ETG3-R
   IMAGE_SIZE := 7680k
-  DEVICE_PACKAGES := -iwinfo -kmod-ath9k -wpad-basic
+  DEVICE_PACKAGES := -iwinfo -kmod-ath9k -wpad-basic-wolfssl
 endef
 TARGET_DEVICES += iodata_etg3-r
 
@@ -978,7 +998,7 @@ define Device/jjplus_ja76pf2
   SOC := ar7161
   DEVICE_VENDOR := jjPlus
   DEVICE_MODEL := JA76PF2
-  DEVICE_PACKAGES += -kmod-ath9k -swconfig -wpad-mini -uboot-envtools fconfig
+  DEVICE_PACKAGES += -kmod-ath9k -swconfig -wpad-basic-wolfssl -uboot-envtools fconfig
   IMAGES := kernel.bin rootfs.bin
   IMAGE/kernel.bin := append-kernel
   IMAGE/rootfs.bin := append-rootfs | pad-rootfs
@@ -1030,6 +1050,7 @@ endef
 TARGET_DEVICES += nec_wg800hp
 
 define Device/netgear_ex6400_ex7300
+  $(Device/netgear_generic)
   SOC := qca9558
   NETGEAR_KERNEL_MAGIC := 0x27051956
   NETGEAR_BOARD_ID := EX7300series
@@ -1037,8 +1058,11 @@ define Device/netgear_ex6400_ex7300
   IMAGE_SIZE := 15552k
   IMAGE/default := append-kernel | pad-offset $$$$(BLOCKSIZE) 64 | \
 	netgear-rootfs | pad-rootfs
+  IMAGE/sysupgrade.bin := $$(IMAGE/default) | append-metadata | \
+	check-size
+  IMAGE/factory.img := $$(IMAGE/default) | netgear-dni | \
+	check-size
   DEVICE_PACKAGES := kmod-ath10k-ct ath10k-firmware-qca99x0-ct
-  $(Device/netgear_ath79)
 endef
 
 define Device/netgear_ex6400
@@ -1054,12 +1078,10 @@ endef
 TARGET_DEVICES += netgear_ex7300
 
 define Device/netgear_wndr3x00
+  $(Device/netgear_generic)
   SOC := ar7161
-  IMAGE/default := append-kernel | pad-to $$$$(BLOCKSIZE) | netgear-squashfs | \
-	append-rootfs | pad-rootfs
   DEVICE_PACKAGES := kmod-usb-ohci kmod-usb2 kmod-usb-ledtrig-usbport \
 	kmod-leds-reset kmod-owl-loader
-  $(Device/netgear_ath79)
 endef
 
 define Device/netgear_wndr3700
@@ -1135,14 +1157,12 @@ endef
 TARGET_DEVICES += netgear_wndrmac-v2
 
 define Device/netgear_wnr2200_common
+  $(Device/netgear_generic)
   SOC := ar7241
   DEVICE_MODEL := WNR2200
   DEVICE_PACKAGES := kmod-usb2 kmod-usb-ledtrig-usbport
   NETGEAR_KERNEL_MAGIC := 0x32323030
   NETGEAR_BOARD_ID := wnr2200
-  IMAGE/default := append-kernel | pad-to $$$$(BLOCKSIZE) | netgear-squashfs | \
-	append-rootfs | pad-rootfs
-  $(Device/netgear_ath79)
 endef
 
 define Device/netgear_wnr2200-8m
@@ -1356,6 +1376,17 @@ define Device/sitecom_wlr-8100
 endef
 TARGET_DEVICES += sitecom_wlr-8100
 
+define Device/telco_t1
+  SOC := qca9531
+  DEVICE_VENDOR := Telco
+  DEVICE_MODEL := T1
+  DEVICE_PACKAGES := kmod-usb2 kmod-usb-net-qmi-wwan \
+	kmod-usb-serial-option uqmi -swconfig -uboot-envtools
+  IMAGE_SIZE := 16192k
+  SUPPORTED_DEVICES += telco_electronics,tel-t1
+endef
+TARGET_DEVICES += telco_t1
+
 define Device/teltonika_rut955
   SOC := ar9344
   DEVICE_VENDOR := Teltonika
@@ -1488,3 +1519,20 @@ define Device/zbtlink_zbt-wd323
 	kmod-usb-serial kmod-usb-serial-cp210x uqmi
 endef
 TARGET_DEVICES += zbtlink_zbt-wd323
+
+define Device/zyxel_nbg6616
+  SOC := qca9557
+  DEVICE_VENDOR := ZyXEL
+  DEVICE_MODEL := NBG6616
+  DEVICE_PACKAGES := kmod-usb2 kmod-usb-ledtrig-usbport kmod-rtc-pcf8563 \
+	kmod-ath10k-ct ath10k-firmware-qca988x-ct
+  IMAGE_SIZE := 15232k
+  RAS_BOARD := NBG6616
+  RAS_ROOTFS_SIZE := 14464k
+  RAS_VERSION := "OpenWrt Linux-$(LINUX_VERSION)"
+  IMAGES += factory.bin
+  IMAGE/factory.bin := append-kernel | pad-to $$$$(BLOCKSIZE) | \
+	append-rootfs | pad-rootfs | pad-to 64k | check-size | zyxel-ras-image
+  SUPPORTED_DEVICES += nbg6616
+endef
+TARGET_DEVICES += zyxel_nbg6616

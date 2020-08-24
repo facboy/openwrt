@@ -9,7 +9,8 @@ ramips_setup_interfaces()
 	local board="$1"
 
 	case $board in
-	asiarf,ap7621-001)
+	asiarf,ap7621-001|\
+	winstars,ws-wn583a6)
 		ucidef_set_interfaces_lan_wan "lan" "wan"
 		;;
 	asiarf,ap7621-nv1|\
@@ -47,11 +48,14 @@ ramips_setup_interfaces()
 	mikrotik,routerboard-750gr3)
 		ucidef_set_interfaces_lan_wan "lan2 lan3 lan4 lan5" "wan"
 		;;
+	mikrotik,routerboard-760igs)
+		ucidef_set_interfaces_lan_wan "lan2 lan3 lan4 lan5" "wan sfp"
+		;;
 	ubnt,edgerouter-x)
-		ucidef_set_interface_lan_wan "eth1 eth2 eth3 eth4" "eth0"
+		ucidef_set_interfaces_lan_wan "eth1 eth2 eth3 eth4" "eth0"
 		;;
 	ubnt,edgerouter-x-sfp)
-		ucidef_set_interface_lan_wan "eth1 eth2 eth3 eth4 eth5" "eth0"
+		ucidef_set_interfaces_lan_wan "eth1 eth2 eth3 eth4 eth5" "eth0"
 		;;
 	zyxel,wap6805)
 		ucidef_set_interface_lan "lan1 lan2 lan3 lan4"
@@ -107,12 +111,14 @@ ramips_setup_macs()
 		label_mac=$lan_mac
 		;;
 	mikrotik,routerboard-750gr3|\
+	mikrotik,routerboard-760igs|\
 	mikrotik,routerboard-m11g|\
 	mikrotik,routerboard-m33g)
 		label_mac=$(cat "/sys/firmware/mikrotik/hard_config/mac_base")
 		wan_mac=$label_mac
 		lan_mac=$(macaddr_add $label_mac 1)
 		;;
+	winstars,ws-wn583a6|\
 	zbtlink,zbt-we1326|\
 	zbtlink,zbt-wg3526-16m|\
 	zbtlink,zbt-wg3526-32m)
