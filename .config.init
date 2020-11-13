@@ -21,6 +21,17 @@ CONFIG_BUILD_LOG=y
 #CONFIG_PACKAGE_MAC80211_DEBUGFS=n
 # END: from fantom-x
 
+# BEGIN: from ACwifidude https://github.com/ACwifidude/openwrt
+# NSS Drivers
+CONFIG_PACKAGE_kmod-qca-nss-drv=y
+CONFIG_PACKAGE_kmod-qca-nss-drv-qdisc=y
+CONFIG_PACKAGE_kmod-qca-nss-ecm-standard=y
+CONFIG_PACKAGE_kmod-qca-nss-gmac=y
+CONFIG_PACKAGE_kmod-nss-ifb=y
+CONFIG_PACKAGE_iptables-mod-physdev=y
+CONFIG_PACKAGE_kmod-ipt-physdev=y
+# END: from ACwifidude
+
 # Debugging options (build gdbserver, include package debug)
 CONFIG_PACKAGE_gdbserver=m
 CONFIG_DEBUG=y
