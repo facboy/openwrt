@@ -14,9 +14,6 @@ CONFIG_DEBUG=y
 # Include package list in build
 CONFIG_INCLUDE_CONFIG=y
 
-# exfat is patented
-CONFIG_BUILD_PATENTED=y
-
 # Longer waiting for failsafe button push
 CONFIG_IMAGEOPT=y
 CONFIG_PREINITOPT=y
@@ -38,18 +35,18 @@ CONFIG_BUSYBOX_CONFIG_FEATURE_LESS_WINCH=y
 ## # CONFIG_PACKAGE_kmod-ath10k-ct is not set
 
 # Add-on programs
-CONFIG_PACKAGE_htop=y
-CONFIG_PACKAGE_nano=y
 CONFIG_PACKAGE_ccrypt=y
 CONFIG_PACKAGE_curl=y
 CONFIG_LIBCURL_OPENSSL=y
-#CONFIG_PACKAGE_vsftpd-tls=y
-CONFIG_PACKAGE_wget=y
-CONFIG_PACKAGE_patch=y
 CONFIG_PACKAGE_diffutils=y
-CONFIG_PACKAGE_tree=y
-CONFIG_PACKAGE_irqbalance=y
 CONFIG_DROPBEAR_ECC=y
+CONFIG_PACKAGE_htop=y
+CONFIG_PACKAGE_irqbalance=y
+CONFIG_PACKAGE_nano=y
+CONFIG_PACKAGE_patch=y
+CONFIG_PACKAGE_tcpdump-mini=y
+CONFIG_PACKAGE_tree=y
+CONFIG_PACKAGE_wget=y
 
 # USB device mount & file systems support
 CONFIG_PACKAGE_block-mount=y
@@ -93,13 +90,16 @@ CONFIG_PACKAGE_luci-ssl-openssl=y
 CONFIG_PACKAGE_luci-app-commands=y
 CONFIG_PACKAGE_luci-app-ddns=y
 CONFIG_PACKAGE_luci-app-sqm=y
+CONFIG_PACKAGE_luci-app-uhttpd=y
 CONFIG_PACKAGE_luci-app-upnp=y
 CONFIG_PACKAGE_luci-app-wol=y
+# CONFIG_LUCI_JSMIN is not set
 
 # Luci statistics
 CONFIG_PACKAGE_luci-app-statistics=y
 CONFIG_PACKAGE_collectd-mod-conntrack=y
 CONFIG_PACKAGE_collectd-mod-cpufreq=y
+CONFIG_PACKAGE_collectd-mod-dhcpleases=y
 CONFIG_PACKAGE_collectd-mod-entropy=y
 CONFIG_PACKAGE_collectd-mod-ping=y
 CONFIG_PACKAGE_collectd-mod-sqm=y
