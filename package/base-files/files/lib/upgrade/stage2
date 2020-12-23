@@ -15,6 +15,7 @@ RAMFS_COPY_DATA=	# extra data files
 
 include /lib/upgrade
 
+echo 3 > /proc/sys/vm/drop_caches
 
 supivot() { # <new_root> <old_root>
 	/bin/mount | grep "on $1 type" 2>&- 1>&- || /bin/mount -o bind $1 $1
