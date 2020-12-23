@@ -1,6 +1,6 @@
 --- a/shell/ash.c
 +++ b/shell/ash.c
-@@ -14392,7 +14392,7 @@ int ash_main(int argc UNUSED_PARAM, char
+@@ -14396,7 +14396,7 @@ int ash_main(int argc UNUSED_PARAM, char
  		if (iflag) {
  			const char *hp = lookupvar("HISTFILE");
  			if (!hp) {

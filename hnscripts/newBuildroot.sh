@@ -13,13 +13,13 @@ TARGET=master
 GITREPO=https://git.openwrt.org/openwrt/openwrt.git
 
 ## Current version
-FILESTAMP=R7800-master-r12470-dfb7a4ce5d-20200307-1020
+FILESTAMP=R7800-master-r13046-df27e949fb-20200423-1942
 
 ### Prerequisites for buildroot
 sudo apt-get install build-essential subversion libncurses5-dev zlib1g-dev
 sudo apt-get install gawk gcc-multilib flex git-core gettext libssl-dev
 
-### Prerequisite for 18.06 and 19.07 on on Ubuntu 17.10+ as it has python3 by default
+### Prerequisite for 18.06 and 19.07 on Ubuntu 17.10+ as it has python3 by default
 # sudo apt-get install python
 
 ### Prerequisite for master on Ubuntu as master needs python3 libs

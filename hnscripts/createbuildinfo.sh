@@ -55,7 +55,7 @@ rm -f $BinDir/md5sums $BinDir/sha256sums
 
 # rename manifest and firmware files
 cd $BinDir
-mv *.manifest $Device-$VersTime.manifest.txt
+mv *.manifest $Device-$VersTime-manifest.txt
 mv $Prefix-squashfs-sysupgrade.bin $Device-$VersTime-sysupgrade.bin
 mv $Prefix-squashfs-factory.img $Device-$VersTime-factory.img
 
