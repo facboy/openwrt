@@ -1,0 +1,6 @@
+OpenWrt master r14887-a47279154e / 2020-11-10 17:41
+---
+main      2020-11-10 a472791 kernel: bump 5.4 to 5.4.75
+luci      2020-11-08 1cff100 luci-app-statistics: CPU plugin: hide 'id
+packages  2020-11-09 6e3c3c4 Merge pull request #13873 from 1715173329
+routing   2020-10-27 7dba1fd Merge pull request #623 from ecsv/batadv-
