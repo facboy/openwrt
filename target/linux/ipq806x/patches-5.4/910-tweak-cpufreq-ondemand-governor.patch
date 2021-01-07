@@ -1,6 +1,6 @@
 --- a/drivers/cpufreq/cpufreq_ondemand.c
 +++ b/drivers/cpufreq/cpufreq_ondemand.c
-@@ -21,10 +21,10 @@
+@@ -18,10 +18,10 @@
  #include "cpufreq_ondemand.h"
  
  /* On-demand governor macros */
