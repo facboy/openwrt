@@ -1,7 +1,7 @@
---- a/ath10k-5.8/mac.c
-+++ b/ath10k-5.8/mac.c
-@@ -4303,6 +4303,24 @@ ath10k_mac_tx_h_get_txmode(struct ath10k
- 	    skb_cb->flags & ATH10K_SKB_F_RAW_TX)
+--- a/ath10k-5.4/mac.c
++++ b/ath10k-5.4/mac.c
+@@ -3277,6 +3277,24 @@ ath10k_mac_tx_h_get_txmode(struct ath10k
+ 	if (test_bit(ATH10K_FLAG_RAW_MODE, &ar->dev_flags))
  		return ATH10K_HW_TXRX_RAW;
  
 +	/* Workaround:
