@@ -28,6 +28,10 @@ CONFIG_BUSYBOX_CONFIG_FEATURE_LESS_FLAGS=y
 CONFIG_BUSYBOX_CONFIG_FEATURE_LESS_REGEXP=y
 CONFIG_BUSYBOX_CONFIG_FEATURE_LESS_WINCH=y
 
+### Build also ath10k mainline .ipk
+### (disable this if you use the below section to fully switch to mainline)
+CONFIG_PACKAGE_kmod-ath10k=m
+
 ## # Mainline ath10k wifi firmware and driver instead of -ct
 ## CONFIG_PACKAGE_ath10k-firmware-qca9984=y
 ## # CONFIG_PACKAGE_ath10k-firmware-qca9984-ct is not set
