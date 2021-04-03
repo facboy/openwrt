@@ -31,6 +31,8 @@ CONFIG_PACKAGE_kmod-nss-ifb=y
 CONFIG_PACKAGE_iptables-mod-physdev=y
 CONFIG_PACKAGE_kmod-ipt-physdev=y
 # END: from ACwifidude
+# mine
+CONFIG_PACKAGE_kmod-qca-nss-drv-pppoe=y
 
 # Debugging options (build gdbserver, include package debug)
 CONFIG_PACKAGE_gdbserver=m
