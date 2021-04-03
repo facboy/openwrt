@@ -17,8 +17,6 @@
 /package/openwrt-packages
 /*.patch
 key-build*
-*.orig
-*.rej
 *~
 .#*
 *#

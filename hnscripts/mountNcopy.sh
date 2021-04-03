@@ -20,6 +20,8 @@ cp $BinDir/*bin $Mountpoint
 sleep 2
 cp $BinDir/*img $Mountpoint
 sleep 2
+cp $BinDir/ath10k* $Mountpoint
+sleep 1
 cp $BinDir/*patch $Mountpoint
 sleep 1
 cp $BinDir/*sh $Mountpoint
