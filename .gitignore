@@ -25,5 +25,6 @@ TAGS*~
 git-src
 .project
 .cproject
-version.date
+.ccache
 .vscode
+version.date
