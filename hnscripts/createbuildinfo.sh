@@ -25,7 +25,7 @@ TFile=$BinDir/$Device-$VersTime
 echo process $Branch...
 
 # cleanup old binaries & patches
-rm -f $BinDir/$Device-*
+rm -f $BinDir/$Device-* $BinDir/ath10k-*
 
 # remove unnecessary files
 rm -f $BinDir/*root.img $BinDir/*vmlinux.elf $BinDir/*initramfs-uImage
@@ -58,4 +58,8 @@ cd $BinDir
 mv *.manifest $Device-$VersTime-manifest.txt
 mv $Prefix-squashfs-sysupgrade.bin $Device-$VersTime-sysupgrade.bin
 mv $Prefix-squashfs-factory.img $Device-$VersTime-factory.img
+
+# copy ath10k ct+mainline kmods
+cp packages/kmod-ath10k_* ath10k-mainline-$VersTime.ipk
+cp packages/kmod-ath10k-ct_* ath10k-ct-$VersTime.ipk
 
