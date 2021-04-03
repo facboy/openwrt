@@ -1,6 +1,6 @@
-OpenWrt master r15044-4bfa1d53c8 / 2020-11-16 00:42
+OpenWrt master r15461+982-9919a1e7ea / 2021-04-03 14:21
 ---
-main      2020-11-15 4bfa1d5 Add CONFIG_PACKAGE_kmod-qca-nss-drv-pppoe
-luci      2020-11-15 15eceb5 Merge remote-tracking branch 'origin'
-packages  2020-11-15 58721b2 postgresql: update to 13.1
-routing   2020-11-10 068a061 Merge pull request #619 from neheb/qg
+main      2021-04-03 6e698e9 Merge remote-tracking branch 'kong/kernel
+luci      2021-04-03 9f6333f Update to version R7800-master-r16372-e62
+packages  2021-04-03 68714e5 Update to version R7800-master-r16372-e62
+routing   2021-03-26 b38a46a bird2: Makefile polishing
