@@ -8,11 +8,12 @@ PKG_LICENSE_FILES:=
 
 PKG_SOURCE_URL:=https://github.com/openwrt/mt76
 PKG_SOURCE_PROTO:=git
-PKG_SOURCE_DATE:=2021-03-26
-PKG_SOURCE_VERSION:=b8609066893a399b6aabe4df2e80eed52336fc69
-PKG_MIRROR_HASH:=af0729f1b0829c7665f5c5c8e9e8a20207ddc534cfa2566538d446515afcdd7d
+PKG_SOURCE_DATE:=2021-06-06
+PKG_SOURCE_VERSION:=22b690334c0f49b11534cc2e331c9d5e17c4a0bc
+PKG_MIRROR_HASH:=ff5e563935919d2e40c1e7254ef3bc06f7ecc5e69f8ddd12903e8f5de942d630
 
 PKG_MAINTAINER:=Felix Fietkau <nbd@nbd.name>
+PKG_USE_NINJA:=0
 PKG_BUILD_PARALLEL:=1
 
 PKG_CONFIG_DEPENDS += \
@@ -155,7 +156,7 @@ define KernelPackage/mt7615-common
   $(KernelPackage/mt76-default)
   TITLE:=MediaTek MT7615 wireless driver common code
   HIDDEN:=1
-  DEPENDS+=@PCI_SUPPORT +kmod-mt76-core +kmod-mt76-connac
+  DEPENDS+=@PCI_SUPPORT +kmod-mt76-core +kmod-mt76-connac +kmod-hwmon-core
   FILES:= $(PKG_BUILD_DIR)/mt7615/mt7615-common.ko
 endef
 
@@ -213,7 +214,7 @@ endef
 define KernelPackage/mt7915e
   $(KernelPackage/mt76-default)
   TITLE:=MediaTek MT7915e wireless driver
-  DEPENDS+=@PCI_SUPPORT +kmod-mt7615-common +@DRIVER_11AX_SUPPORT
+  DEPENDS+=@PCI_SUPPORT +kmod-mt7615-common +kmod-hwmon-core +kmod-thermal +@DRIVER_11AX_SUPPORT
   FILES:= $(PKG_BUILD_DIR)/mt7915/mt7915e.ko
   AUTOLOAD:=$(call AutoProbe,mt7915e)
 endef
