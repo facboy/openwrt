@@ -1,6 +1,6 @@
-OpenWrt master r16372-e62ace0ecf / 2021-03-31 17:56
+OpenWrt master r16972-3dabb62581 / 2021-06-20 19:36
 ---
-main      2021-03-31 e62ace0 netifd: update to git HEAD
-luci      2021-03-31 cd8d7a5 Translated using Weblate (Malay)
-packages  2021-03-31 abce423 podman: Add selinux variant and several i
-routing   2021-03-26 b38a46a bird2: Makefile polishing
+main      2021-06-19 3dabb62 treewide: remove PKG_INSTALL from CMake p
+luci      2021-06-18 2f0ffd9 luco-app-ksmbd, luci-app-omcproxy: use re
+packages  2021-06-20 93c1821 Merge pull request #15923 from nxhack/icu
+routing   2021-06-17 b81e9c8 issuetemplate: reference foreign repos
