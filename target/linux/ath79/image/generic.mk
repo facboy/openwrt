@@ -35,7 +35,7 @@ define Build/addpattern
 endef
 
 define Build/append-md5sum-bin
-	$(STAGING_DIR_HOST)/bin/mkhash md5 $@ | sed 's/../\\\\x&/g' |\
+	$(MKHASH) md5 $@ | sed 's/../\\\\x&/g' |\
 		xargs echo -ne >> $@
 endef
 
@@ -290,11 +290,14 @@ endef
 TARGET_DEVICES += alfa-network_r36a
 
 define Device/allnet_all-wap02860ac
+  $(Device/senao_loader_okli)
   SOC := qca9558
   DEVICE_VENDOR := ALLNET
   DEVICE_MODEL := ALL-WAP02860AC
   DEVICE_PACKAGES := ath10k-firmware-qca988x-ct kmod-ath10k-ct
-  IMAGE_SIZE := 13120k
+  IMAGE_SIZE := 11584k
+  LOADER_FLASH_OFFS := 0x220000
+  SENAO_IMGNAME := senao-allwap02860ac
 endef
 TARGET_DEVICES += allnet_all-wap02860ac
 
@@ -550,6 +553,16 @@ define Device/comfast_cf-e314n-v2
 endef
 TARGET_DEVICES += comfast_cf-e314n-v2
 
+define Device/comfast_cf-e375ac
+  SOC := qca9563
+  DEVICE_VENDOR := COMFAST
+  DEVICE_MODEL := CF-E375AC
+  DEVICE_PACKAGES := kmod-ath10k-ct \
+	ath10k-firmware-qca9888-ct -uboot-envtools
+  IMAGE_SIZE := 16000k
+endef
+TARGET_DEVICES += comfast_cf-e375ac
+
 define Device/comfast_cf-e5
   SOC := qca9531
   DEVICE_VENDOR := COMFAST
@@ -650,6 +663,15 @@ define Device/compex_wpj563
   IMAGE/cpximg-7a02.bin := append-kernel | pad-to $$$$(BLOCKSIZE) | append-rootfs | pad-rootfs | mkmylofw_16m 0x694 2
 endef
 TARGET_DEVICES += compex_wpj563
+
+define Device/devolo_dlan-pro-1200plus-ac
+  SOC := ar9344
+  DEVICE_VENDOR := Devolo
+  DEVICE_MODEL := dLAN pro 1200+ WiFi ac
+  DEVICE_PACKAGES := kmod-ath10k-ct ath10k-firmware-qca988x-ct
+  IMAGE_SIZE := 15872k
+endef
+TARGET_DEVICES += devolo_dlan-pro-1200plus-ac
 
 define Device/devolo_dvl1200e
   SOC := qca9558
@@ -994,8 +1016,8 @@ define Device/engenius_eap1200h
   DEVICE_VENDOR := EnGenius
   DEVICE_MODEL := EAP1200H
   DEVICE_PACKAGES := ath10k-firmware-qca988x-ct kmod-ath10k-ct
-  IMAGE_SIZE := 11520k
-  LOADER_FLASH_OFFS := 0x230000
+  IMAGE_SIZE := 11584k
+  LOADER_FLASH_OFFS := 0x220000
   SENAO_IMGNAME := ar71xx-generic-eap1200h
 endef
 TARGET_DEVICES += engenius_eap1200h
@@ -1006,8 +1028,8 @@ define Device/engenius_eap300-v2
   DEVICE_VENDOR := EnGenius
   DEVICE_MODEL := EAP300
   DEVICE_VARIANT := v2
-  IMAGE_SIZE := 12032k
-  LOADER_FLASH_OFFS := 0x230000
+  IMAGE_SIZE := 12096k
+  LOADER_FLASH_OFFS := 0x220000
   SENAO_IMGNAME := senao-eap300v2
 endef
 TARGET_DEVICES += engenius_eap300-v2
@@ -1017,8 +1039,8 @@ define Device/engenius_eap600
   SOC := ar9344
   DEVICE_VENDOR := EnGenius
   DEVICE_MODEL := EAP600
-  IMAGE_SIZE := 12032k
-  LOADER_FLASH_OFFS := 0x230000
+  IMAGE_SIZE := 12096k
+  LOADER_FLASH_OFFS := 0x220000
   SENAO_IMGNAME := senao-eap600
 endef
 TARGET_DEVICES += engenius_eap600
@@ -1054,8 +1076,8 @@ define Device/engenius_ecb600
   SOC := ar9344
   DEVICE_VENDOR := EnGenius
   DEVICE_MODEL := ECB600
-  IMAGE_SIZE := 12032k
-  LOADER_FLASH_OFFS := 0x230000
+  IMAGE_SIZE := 12096k
+  LOADER_FLASH_OFFS := 0x220000
   SENAO_IMGNAME := senao-ecb600
 endef
 TARGET_DEVICES += engenius_ecb600
@@ -1067,8 +1089,8 @@ define Device/engenius_ens202ext-v1
   DEVICE_MODEL := ENS202EXT
   DEVICE_VARIANT := v1
   DEVICE_PACKAGES := rssileds
-  IMAGE_SIZE := 12032k
-  LOADER_FLASH_OFFS := 0x230000
+  IMAGE_SIZE := 12096k
+  LOADER_FLASH_OFFS := 0x220000
   SENAO_IMGNAME := senao-ens202ext
 endef
 TARGET_DEVICES += engenius_ens202ext-v1
@@ -1080,8 +1102,8 @@ define Device/engenius_enstationac-v1
   DEVICE_MODEL := EnStationAC
   DEVICE_VARIANT := v1
   DEVICE_PACKAGES := ath10k-firmware-qca988x-ct kmod-ath10k-ct rssileds
-  IMAGE_SIZE := 11520k
-  LOADER_FLASH_OFFS := 0x230000
+  IMAGE_SIZE := 11584k
+  LOADER_FLASH_OFFS := 0x220000
   SENAO_IMGNAME := ar71xx-generic-enstationac
 endef
 TARGET_DEVICES += engenius_enstationac-v1
@@ -1395,20 +1417,37 @@ define Device/mercury_mw4530r-v1
 endef
 TARGET_DEVICES += mercury_mw4530r-v1
 
-define Device/nec_wg1200cr
-  SOC := qca9563
+define Device/nec_wx1200cr
   DEVICE_VENDOR := NEC
+  IMAGE/default := append-kernel | pad-offset $$$$(BLOCKSIZE) 64 | append-rootfs
+  IMAGE/sysupgrade.bin := $$(IMAGE/default) | seama | pad-rootfs | \
+	append-metadata | check-size
+  DEVICE_PACKAGES := kmod-ath10k-ct ath10k-firmware-qca9888-ct
+endef
+
+define Device/nec_wf1200cr
+  $(Device/nec_wx1200cr)
+  SOC := qca9561
+  DEVICE_MODEL := Aterm WF1200CR
+  IMAGE_SIZE := 7680k
+  SEAMA_MTDBLOCK := 5
+  SEAMA_SIGNATURE := wrgac62_necpf.2016gui_wf1200cr
+  IMAGES += factory.bin
+  IMAGE/factory.bin := $$(IMAGE/default) | pad-rootfs -x 64 | seama | \
+	seama-seal | nec-enc ryztfyutcrqqo69d | check-size
+endef
+TARGET_DEVICES += nec_wf1200cr
+
+define Device/nec_wg1200cr
+  $(Device/nec_wx1200cr)
+  SOC := qca9563
   DEVICE_MODEL := Aterm WG1200CR
   IMAGE_SIZE := 7616k
   SEAMA_MTDBLOCK := 6
   SEAMA_SIGNATURE := wrgac72_necpf.2016gui_wg1200cr
   IMAGES += factory.bin
-  IMAGE/default := append-kernel | pad-offset $$$$(BLOCKSIZE) 64 | append-rootfs
-  IMAGE/sysupgrade.bin := $$(IMAGE/default) | seama | pad-rootfs | \
-	append-metadata | check-size
   IMAGE/factory.bin := $$(IMAGE/default) | pad-rootfs -x 64 | seama | \
 	seama-seal | nec-enc 9gsiy9nzep452pad | check-size
-  DEVICE_PACKAGES := kmod-ath10k-ct ath10k-firmware-qca9888-ct
 endef
 TARGET_DEVICES += nec_wg1200cr
 
@@ -1614,6 +1653,26 @@ define Device/openmesh_common_256k
   IMAGE/sysupgrade.bin := append-rootfs | pad-rootfs | \
 	openmesh-image ce_type=$$$$(OPENMESH_CE_TYPE) | append-metadata
 endef
+
+define Device/openmesh_a40
+  $(Device/openmesh_common_64k)
+  SOC := qca9558
+  DEVICE_MODEL := A40
+  DEVICE_PACKAGES += kmod-ath10k-ct ath10k-firmware-qca988x-ct kmod-usb2
+  OPENMESH_CE_TYPE := A60
+  SUPPORTED_DEVICES += a40
+endef
+TARGET_DEVICES += openmesh_a40
+
+define Device/openmesh_a60
+  $(Device/openmesh_common_64k)
+  SOC := qca9558
+  DEVICE_MODEL := A60
+  DEVICE_PACKAGES += kmod-ath10k-ct ath10k-firmware-qca988x-ct kmod-usb2
+  OPENMESH_CE_TYPE := A60
+  SUPPORTED_DEVICES += a60
+endef
+TARGET_DEVICES += openmesh_a60
 
 define Device/openmesh_mr600-v1
   $(Device/openmesh_common_64k)
@@ -1866,6 +1925,43 @@ define Device/plasmacloud_pa300e
   DEVICE_MODEL := PA300E
 endef
 TARGET_DEVICES += plasmacloud_pa300e
+
+define Device/qca_ap143
+  SOC := qca9533
+  DEVICE_VENDOR := Qualcomm Atheros
+  DEVICE_MODEL := AP143
+  DEVICE_PACKAGES := kmod-usb2
+  SUPPORTED_DEVICES += ap143
+  LOADER_TYPE := bin
+  LOADER_FLASH_OFFS := 0x50000
+  KERNEL := kernel-bin | append-dtb | lzma | uImage lzma -M 0x4f4b4c49
+  COMPILE := loader-$(1).bin loader-$(1).uImage
+  COMPILE/loader-$(1).bin := loader-okli-compile
+  COMPILE/loader-$(1).uImage := append-loader-okli $(1) | pad-to 64k | lzma | \
+	uImage lzma
+endef
+
+define Device/qca_ap143-8m
+  $(Device/qca_ap143)
+  DEVICE_VARIANT := (8M)
+  IMAGE_SIZE := 7744k
+  IMAGES += factory.bin
+  IMAGE/factory.bin := append-kernel | pad-to $$$$(BLOCKSIZE) | \
+	append-rootfs | pad-rootfs | check-size | pad-to 6336k | \
+	append-loader-okli-uimage $(1) | pad-to 64k
+endef
+TARGET_DEVICES += qca_ap143-8m
+
+define Device/qca_ap143-16m
+  $(Device/qca_ap143)
+  DEVICE_VARIANT := (16M)
+  IMAGE_SIZE := 15936k
+  IMAGES += factory.bin
+  IMAGE/factory.bin := append-kernel | pad-to $$$$(BLOCKSIZE) | \
+	append-rootfs | pad-rootfs | check-size | pad-to 14528k | \
+	append-loader-okli-uimage $(1) | pad-to 64k
+endef
+TARGET_DEVICES += qca_ap143-16m
 
 define Device/qihoo_c301
   $(Device/seama)
@@ -2218,6 +2314,15 @@ define Device/yuncore_xd4200
   IMAGE/tftp.bin := $$(IMAGE/sysupgrade.bin) | yuncore-tftp-header-16m
 endef
 TARGET_DEVICES += yuncore_xd4200
+
+define Device/ziking_cpe46b
+  SOC := ar9330
+  DEVICE_VENDOR := ZiKing
+  DEVICE_MODEL := CPE46B
+  IMAGE_SIZE := 8000k
+  DEVICE_PACKAGES := kmod-i2c-gpio
+endef
+TARGET_DEVICES += ziking_cpe46b
 
 define Device/zbtlink_zbt-wd323
   SOC := ar9344
