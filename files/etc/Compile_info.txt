@@ -1,6 +1,6 @@
-OpenWrt master r16972-3dabb62581 / 2021-06-20 19:36
+OpenWrt master r17354-c5616a8ae1 / 2021-08-19 18:47
 ---
-main      2021-06-19 3dabb62 treewide: remove PKG_INSTALL from CMake p
-luci      2021-06-18 2f0ffd9 luco-app-ksmbd, luci-app-omcproxy: use re
-packages  2021-06-20 93c1821 Merge pull request #15923 from nxhack/icu
-routing   2021-06-17 b81e9c8 issuetemplate: reference foreign repos
+main      2021-08-19 c5616a8 image: fix build with SELinux
+luci      2021-08-19 adbaa8a Merge pull request #5270 from vgaetera/if
+packages  2021-08-19 bbdaaac Merge pull request #16394 from turris-cz/
+routing   2021-08-19 383c52f cjdns: fix uci-defaults (#714)
