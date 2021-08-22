@@ -7,6 +7,20 @@ CONFIG_TARGET_ipq806x_generic_DEVICE_netgear_r7800=y
 CONFIG_DEVEL=y
 CONFIG_BUILD_LOG=y
 
+# BEGIN: from fantom-x at some point
+# Compile time optimization
+# cng seems like maybe these aren't necessary now? https://forum.openwrt.org/t/solved-defconfig-ipq806x-target-optimization-missing/34027/3
+#CONFIG_EXTRA_OPTIMIZATION="-O2 -pipe -mcpu=cortex-a15 -mfpu=neon-vfpv4 -fno-caller-saves -fno-plt"
+#CONFIG_TARGET_OPTIONS=y
+#CONFIG_TARGET_OPTIMIZATION=""
+# perhaps these two still do something?
+#CONFIG_OPENSSL_OPTIMIZE_SPEED=y
+#CONFIG_ZLIB_OPTIMIZE_SPEED=y
+
+# "Kernel Module" -> "Wireless Drivers" -> "kmod-80211" -> "Export mac80211 internals in DebugFS"
+#CONFIG_PACKAGE_MAC80211_DEBUGFS=n
+# END: from fantom-x
+
 # Debugging options (build gdbserver, include package debug)
 CONFIG_PACKAGE_gdbserver=m
 CONFIG_DEBUG=y
@@ -89,7 +103,8 @@ CONFIG_PACKAGE_wpad-openssl=y
 CONFIG_PACKAGE_ca-certificates=y
 
 # Luci (SSL from OpenSSL)
-CONFIG_PACKAGE_luci-ssl-openssl=y
+#CONFIG_PACKAGE_luci-ssl-openssl=y
+CONFIG_PACKAGE_luci-ssl=y
 CONFIG_PACKAGE_luci-app-commands=y
 CONFIG_PACKAGE_luci-app-ddns=y
 CONFIG_PACKAGE_luci-app-sqm=y
@@ -130,7 +145,7 @@ CONFIG_PACKAGE_iptables-mod-ipsec=y
 CONFIG_PACKAGE_luci-app-bcp38=y
 
 # Adblock package with Luci support, initially disabled
-CONFIG_PACKAGE_luci-app-adblock=y
+CONFIG_PACKAGE_luci-app-adblock=n
 
 # BanIP package with Luci support, initially disabled
 CONFIG_PACKAGE_luci-app-banip=y
@@ -141,3 +156,11 @@ CONFIG_PACKAGE_luci-app-nlbwmon=y
 # chaoskey TRNG USB dongle
 CONFIG_PACKAGE_kmod-chaoskey=y
 
+# MINE
+CONFIG_PACKAGE_kmod-fs-xfs=y
+CONFIG_PACKAGE_kmod-fs-f2fs=y
+CONFIG_PACKAGE_luci-app-openvpn=y
+CONFIG_PACKAGE_openvpn-easy-rsa=y
+CONFIG_PACKAGE_openvpn-mbedtls=y
+CONFIG_PACKAGE_bash=y
+CONFIG_PACKAGE_luci-app-unbound=y

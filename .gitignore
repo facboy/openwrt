@@ -27,3 +27,4 @@ git-src
 .cproject
 .ccache
 .vscode*
+version.date
