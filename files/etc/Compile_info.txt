@@ -1,6 +1,6 @@
-OpenWrt master r17354-c5616a8ae1 / 2021-08-19 18:47
+OpenWrt master r17753-48e209e5c5 / 2021-10-13 19:56
 ---
-main      2021-08-19 c5616a8 image: fix build with SELinux
-luci      2021-08-19 adbaa8a Merge pull request #5270 from vgaetera/if
-packages  2021-08-19 bbdaaac Merge pull request #16394 from turris-cz/
-routing   2021-08-19 383c52f cjdns: fix uci-defaults (#714)
+main      2021-10-13 48e209e tools/fakeroot: explicitly pass CPP varia
+luci      2021-10-12 1c3b32d luci-theme-openwrt: add success style for
+packages  2021-10-13 2f51a01 yq: Update to 4.13.4
+routing   2021-10-13 0bb6aa0 olsrd: wait for wireless to initialize be

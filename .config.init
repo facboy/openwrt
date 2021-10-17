@@ -8,7 +8,7 @@ CONFIG_DEVEL=y
 CONFIG_BUILD_LOG=y
 
 # Debugging options (build gdbserver, include package debug)
-CONFIG_PACKAGE_gdbserver=m
+CONFIG_PACKAGE_gdbserver=y
 CONFIG_DEBUG=y
 
 # Include package list in build
