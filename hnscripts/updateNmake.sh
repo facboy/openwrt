@@ -3,9 +3,9 @@
 # update & make  -  Update source code and continue to make the build
 
 umask 0022
-echo "...update main source..."
-git pull
-[ "$?" -ne 0 ] && echo "Updating the main OpenWrt source code failed." && exit 1
+#echo "...update main source..."
+#git pull
+#[ "$?" -ne 0 ] && echo "Updating the main OpenWrt source code failed." && exit 1
 echo "...update feeds..."
 ./scripts/feeds update -a
 [ "$?" -ne 0 ] && echo "Updating the feeds failed." && exit 1
