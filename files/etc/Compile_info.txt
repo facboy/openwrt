@@ -1,0 +1,6 @@
+OpenWrt master r18621-af8a059bb4 / 2022-01-22 18:40
+---
+main      2022-01-22 af8a059 ath79: add support for GL.iNet GL-XE300
+luci      2022-01-22 6ada502 Merge pull request #5642 from hgl/xfrm
+packages  2022-01-22 59af1d0 Merge pull request #17543 from stintel/va
+routing   2022-01-16 0bffe62 olsrd: add ubus ipc integration to olsrd

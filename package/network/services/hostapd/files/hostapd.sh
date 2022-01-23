@@ -763,6 +763,11 @@ hostapd_set_bss_options() {
 		set_default wps_manufacturer "www.openwrt.org"
 		set_default wps_independent 1
 
+		# Set WPS label pin to original Netgear value stored in art partition
+		# Value for wps_pin can be overridden by /etc/config/wireless
+#		local PINdefault="$(dd if=/dev/mtdblock3 bs=1 skip=18 count=8 2>/dev/null)"
+#		set_default wps_pin "$PINdefault"
+
 		wps_state=2
 		[ -n "$wps_not_configured" ] && wps_state=1
 
@@ -848,8 +853,8 @@ hostapd_set_bss_options() {
 			json_get_vars mobility_domain ft_psk_generate_local ft_over_ds reassociation_deadline
 
 			set_default mobility_domain "$(echo "$ssid" | md5sum | head -c 4)"
-			set_default ft_over_ds 1
-			set_default reassociation_deadline 1000
+			set_default ft_over_ds 0
+			set_default reassociation_deadline 20000
 
 			case "$auth_type" in
 				psk|sae|psk-sae)

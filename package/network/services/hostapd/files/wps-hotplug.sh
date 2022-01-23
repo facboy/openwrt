@@ -39,6 +39,7 @@ wps_catch_credentials() {
 }
 
 if [ "$ACTION" = "released" ] && [ "$BUTTON" = "wps" ]; then
+	logger "WPS button pressed, looking for active radios"
 	# If the button was pressed for 3 seconds or more, trigger WPS on
 	# wpa_supplicant only, no matter if hostapd is running or not.  If
 	# was pressed for less than 3 seconds, try triggering on
