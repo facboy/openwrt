@@ -57,5 +57,5 @@ rm -f $BinDir/md5sums $BinDir/sha256sums
 cd $BinDir
 mv *.manifest $Device-$VersTime-manifest.txt
 mv $Prefix-squashfs-sysupgrade.img.gz $Device-$VersTime-squashfs-sysupgrade.img.gz
-mv $Prefix-ext4-sysupgrade.img.gz $Device-$VersTime-ext4-sysupgrade.img.gz
+#mv $Prefix-ext4-sysupgrade.img.gz $Device-$VersTime-ext4-sysupgrade.img.gz
 #mv $Prefix-squashfs-factory.img $Device-$VersTime-factory.img
