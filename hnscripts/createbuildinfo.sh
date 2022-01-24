@@ -14,9 +14,9 @@ getGitInfo() {
  )
 }
 
-BinDir=$PWD/bin/targets/ipq806x/generic
-Device=R7800
-Prefix=openwrt-ipq806x-generic-netgear_r7800
+BinDir=$PWD/bin/targets/rockchip/armv8
+Device=R4S
+Prefix=openwrt-rockchip-armv8-friendlyarm_nanopi-r4s
 Branch=master
 
 VersTime=$Branch-$(scripts/getver.sh)-$(date +%Y%m%d-%H%M)
@@ -56,10 +56,6 @@ rm -f $BinDir/md5sums $BinDir/sha256sums
 # rename manifest and firmware files
 cd $BinDir
 mv *.manifest $Device-$VersTime-manifest.txt
-mv $Prefix-squashfs-sysupgrade.bin $Device-$VersTime-sysupgrade.bin
-mv $Prefix-squashfs-factory.img $Device-$VersTime-factory.img
-
-# copy ath10k ct+mainline kmods
-cp packages/kmod-ath10k_* ath10k-mainline-$VersTime.ipk
-cp packages/kmod-ath10k-ct_* ath10k-ct-$VersTime.ipk
-
+mv $Prefix-squashfs-sysupgrade.img.gz $Device-$VersTime-squashfs-sysupgrade.img.gz
+mv $Prefix-ext4-sysupgrade.img.gz $Device-$VersTime-ext4-sysupgrade.img.gz
+#mv $Prefix-squashfs-factory.img $Device-$VersTime-factory.img
