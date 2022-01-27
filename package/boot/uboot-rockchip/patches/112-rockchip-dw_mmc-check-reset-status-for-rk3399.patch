@@ -1,0 +1,52 @@
+From 60a32b83607cd757c7a0f5869527c9a631b2d5e8 Mon Sep 17 00:00:00 2001
+From: hmz007 <hmz007@gmail.com>
+Date: Thu, 2 Dec 2021 20:01:17 +0800
+Subject: [PATCH] rockchip: dw_mmc: check reset status for rk3399
+
+For power-on reset, it is not necessary to disable HS mode.
+
+Ported from https://github.com/friendlyarm/uboot-rockchip/commit/60a32b83607cd757c7a0f5869527c9a631b2d5e8 by facboy@gmail.com
+
+Signed-off-by: hmz007 <hmz007@gmail.com>
+---
+ arch/arm/mach-rockchip/rk3399/rk3399.c | 6 ++++++
+ drivers/mmc/rockchip_dw_mmc.c          | 5 ++++-
+ 2 files changed, 10 insertions(+), 1 deletion(-)
+
+diff --git a/arch/arm/mach-rockchip/rk3399/rk3399.c b/arch/arm/mach-rockchip/rk3399/rk3399.c
+index 709ed89f2d..2cf7d12ccc 100644
+--- a/arch/arm/mach-rockchip/rk3399/rk3399.c
++++ b/arch/arm/mach-rockchip/rk3399/rk3399.c
+@@ -282,3 +282,9 @@ void spl_board_init(void)
+ #endif
+ }
+ #endif
++
++int rockchip_reset_status(void)
++{
++#define CRU_GLB_RST_ST	0xff760514
++  return readl(CRU_GLB_RST_ST);
++}
+diff --git a/drivers/mmc/rockchip_dw_mmc.c b/drivers/mmc/rockchip_dw_mmc.c
+index 1b57f78fe2..760be85a7b 100644
+--- a/drivers/mmc/rockchip_dw_mmc.c
++++ b/drivers/mmc/rockchip_dw_mmc.c
+@@ -35,6 +35,8 @@ struct rockchip_dwmmc_priv {
+ 	u32 minmax[2];
+ };
+
++__weak int rockchip_reset_status(void) { return 0; }
++
+ static uint rockchip_dwmmc_get_mmc_clk(struct dwmci_host *host, uint freq)
+ {
+ 	struct udevice *dev = host->priv;
+@@ -145,7 +149,8 @@ static int rockchip_dwmmc_probe(struct udevice *dev)
+ 	}
+ #endif
+ 	dwmci_setup_cfg(&plat->cfg, host, priv->minmax[1], priv->minmax[0]);
+-	if (dev_read_bool(dev, "u-boot,spl-broken-hs"))
++	if (rockchip_reset_status() &&
++	    dev_read_bool(dev, "u-boot,spl-broken-hs"))
+ 		plat->cfg.host_caps &= ~MMC_MODE_HS;
+ 	host->mmc = &plat->mmc;
+ 	host->mmc->priv = &priv->host;
