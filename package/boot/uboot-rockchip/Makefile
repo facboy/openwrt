@@ -5,12 +5,21 @@
 include $(TOPDIR)/rules.mk
 include $(INCLUDE_DIR)/kernel.mk
 
-PKG_VERSION:=2021.07
+PKG_VERSION:=nanopi4-v2017.09
 PKG_RELEASE:=$(AUTORELEASE)
 
-PKG_HASH:=312b7eeae44581d1362c3a3f02c28d806647756c82ba8c72241c7cdbe68ba77e
-
+PKG_SOURCE_PROTO:=git
+PKG_SOURCE_URL:=git@github.com:friendlyarm/uboot-rockchip.git
+PKG_SOURCE_DATE:=2022-01-10
+PKG_SOURCE_VERSION:=60a32b83607cd757c7a0f5869527c9a631b2d5e8
+PKG_MIRROR_HASH:=80c7a5599407d7a0a5231ca3878bea3576da95100abcb93e62e40aa721175372
 PKG_MAINTAINER:=Tobias Maedel <openwrt@tbspace.de>
+
+BL31_ELF_SOURCE_URL:=https://github.com/friendlyarm/rkbin/raw/friendlyelec/bin/rk33/
+BL31_ELF_SOURCE_FILE:=rk3399_bl31_v1.35.elf
+BL31_ELF_HASH:=04489e39580d93665a50660ce4ec83eecd51aa6f54cbe20f0402678b69144c06
+IDB_LOADER_SOURCE_URL:=https://github.com/friendlyarm/sd-fuse_rk3399/raw/kernel-5.10.y/prebuilt/
+IDB_LOADER_HASH:=b86b283ed12c58f2d63198e96a76d42da29b845c36996d99ecd4299d1394d49c
 
 include $(INCLUDE_DIR)/u-boot.mk
 include $(INCLUDE_DIR)/package.mk
@@ -46,6 +55,7 @@ define U-Boot/nanopi-r4s-rk3399
   DEPENDS:=+PACKAGE_u-boot-nanopi-r4s-rk3399:arm-trusted-firmware-rockchip
   PKG_BUILD_DEPENDS:=arm-trusted-firmware-rockchip
   ATF:=rk3399_bl31.elf
+  UBOOT_CONFIG:=rk3399
 endef
 
 define U-Boot/rock-pi-4-rk3399
@@ -95,8 +105,17 @@ endif
 	echo 'CONFIG_IDENT_STRING=" OpenWrt"' >> $(PKG_BUILD_DIR)/.config
 endef
 
+define Build/Compile/U-Boot
+	$(SCRIPT_DIR)/download.pl $(PKG_BUILD_DIR) bl31.elf $(BL31_ELF_HASH) $(BL31_ELF_SOURCE_FILE) $(BL31_ELF_SOURCE_URL)
+	+$(MAKE) _all u-boot.itb -C $(PKG_BUILD_DIR) \
+		CROSS_COMPILE=$(TARGET_CROSS) \
+		$(if $(DTC),DTC="$(DTC)") \
+		$(UBOOT_MAKE_FLAGS)
+endef
+
 define Build/InstallDev
 	$(INSTALL_DIR) $(STAGING_DIR_IMAGE)
+	$(SCRIPT_DIR)/download.pl $(PKG_BUILD_DIR) idbloader.img $(IDB_LOADER_HASH) idbloader.img $(IDB_LOADER_SOURCE_URL)
 	$(CP) $(PKG_BUILD_DIR)/idbloader.img $(STAGING_DIR_IMAGE)/$(BUILD_VARIANT)-idbloader.img
 	$(CP) $(PKG_BUILD_DIR)/u-boot.itb $(STAGING_DIR_IMAGE)/$(BUILD_VARIANT)-u-boot.itb
 endef
