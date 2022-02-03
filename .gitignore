@@ -13,15 +13,12 @@
 /logs
 /feeds
 /feeds.conf
-/files
 /overlay
 /package/feeds
 /package/openwrt-packages
 /*.patch
 /llvm-bpf*
 key-build*
-*.orig
-*.rej
 *~
 .#*
 *#

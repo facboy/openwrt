@@ -1,0 +1,6 @@
+OpenWrt master r18722-e045e40671 / 2022-02-03 18:57
+---
+main      2022-02-03 e045e40 mt76: update to the latest version
+luci      2022-02-02 6524da4 Translated using Weblate (French)
+packages  2022-02-03 71e81d9 rtklib: update to 2.4.3 b34; fix patches
+routing   2022-02-01 879725c babeld: remove unused return variable
