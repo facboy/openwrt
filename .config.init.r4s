@@ -184,3 +184,9 @@ CONFIG_CCACHE_DIR="/home/chrisng/tmp/openwrt.ccache"
 # disable ext4 image build
 # CONFIG_TARGET_ROOTFS_EXT4FS is not set
 CONFIG_TARGET_ROOTFS_PARTSIZE=1024
+# enable crypto
+CONFIG_PACKAGE_kmod-cryptodev=y
+CONFIG_PACKAGE_libopenssl-devcrypto=y
+# gnutls is enabledby knot-resolver
+CONFIG_GNUTLS_CRYPTODEV=y
+
