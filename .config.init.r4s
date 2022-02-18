@@ -186,6 +186,12 @@ CONFIG_CCACHE_DIR="/home/chrisng/tmp/openwrt.ccache"
 CONFIG_TARGET_ROOTFS_EXT4FS=y
 CONFIG_TARGET_ROOTFS_PARTSIZE=1024
 
+# enable crypto
+CONFIG_PACKAGE_kmod-cryptodev=y
+CONFIG_PACKAGE_libopenssl-devcrypto=y
+# gnutls is enabledby knot-resolver
+CONFIG_GNUTLS_CRYPTODEV=y
+
 # add docker
 CONFIG_DOCKER_OPTIONAL_FEATURES=y
 CONFIG_DOCKER_STO_EXT4=y
