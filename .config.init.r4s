@@ -23,8 +23,9 @@ CONFIG_BUILD_LOG=y
 #CONFIG_USE_LLVM_BUILD=y
 
 # Debugging options (build gdbserver, include package debug)
-CONFIG_PACKAGE_gdbserver=y
-CONFIG_DEBUG=y
+# disabled because it breaks containerd build (go loadelf problems)
+#CONFIG_PACKAGE_gdbserver=y
+#CONFIG_DEBUG=y
 
 # Include package list in build
 CONFIG_INCLUDE_CONFIG=y
@@ -182,5 +183,14 @@ CONFIG_CCACHE=y
 CONFIG_CCACHE_DIR="/home/chrisng/tmp/openwrt.ccache"
 
 # disable ext4 image build
-# CONFIG_TARGET_ROOTFS_EXT4FS is not set
+CONFIG_TARGET_ROOTFS_EXT4FS=y
 CONFIG_TARGET_ROOTFS_PARTSIZE=1024
+
+# add docker
+CONFIG_DOCKER_OPTIONAL_FEATURES=y
+CONFIG_DOCKER_STO_EXT4=y
+CONFIG_PACKAGE_docker=y
+CONFIG_PACKAGE_docker-compose=y
+CONFIG_PACKAGE_dockerd=y
+CONFIG_PACKAGE_luci-app-dockerman=y
+CONFIG_PACKAGE_uxc=y
