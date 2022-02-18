@@ -183,3 +183,4 @@ CONFIG_CCACHE_DIR="/home/chrisng/tmp/openwrt.ccache"
 
 # disable ext4 image build
 # CONFIG_TARGET_ROOTFS_EXT4FS is not set
+CONFIG_TARGET_ROOTFS_PARTSIZE=1024
