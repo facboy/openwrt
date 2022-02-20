@@ -1,0 +1,6 @@
+OpenWrt master r18881-4d8020072e / 2022-02-18 18:27
+---
+main      2022-02-18 4d80200 realtek: fix locking bug in rtl838x_hw_re
+luci      2022-02-18 3db6c9b Translated using Weblate (Ukrainian)
+packages  2022-02-17 c48a375 haproxy: Update HAProxy to v2.4.13
+routing   2022-02-13 4afbe17 olsrd: fix setting default interface conf
