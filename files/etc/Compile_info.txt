@@ -1,0 +1,6 @@
+OpenWrt master r19623-064e7e57b4 / 2022-05-13 16:46
+---
+main      2022-05-13 064e7e5 ramips: fix booting on Samknows SK-WB8
+luci      2022-05-10 4e768e5 Translated using Weblate (Polish)
+packages  2022-05-13 f906a32 haproxy: Update HAProxy to v2.4.16
+routing   2022-05-13 50e02d4 Merge pull request #863 from ecsv/batadv-
