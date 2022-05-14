@@ -187,3 +187,9 @@ CONFIG_PACKAGE_libopenssl-devcrypto=y
 # gnutls is enabledby knot-resolver
 CONFIG_GNUTLS_CRYPTODEV=y
 
+# for policy-based-routing
+CONFIG_PACKAGE_kmod-ipt-conntrack=y
+CONFIG_PACKAGE_kmod-ipt-conntrack-extra=y
+CONFIG_PACKAGE_kmod-ipt-ipset=y
+CONFIG_PACKAGE_kmod-ipt-raw=y
+CONFIG_PACKAGE_kmod-ipt-raw6=y
