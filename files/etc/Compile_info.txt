@@ -1,0 +1,6 @@
+OpenWrt master r19863-fd72e595c2 / 2022-06-20 18:58
+---
+main      2022-06-20 fd72e59 ramips: fix booting on ZyXEL NBG-419N v2
+luci      2022-06-20 cc3d97c luci-base: remove redundant english trans
+packages  2022-06-19 b9a47cc django: bump to version 4.0.5
+routing   2022-06-18 217330b cjdns: bump v21.1 and patch find-python (
