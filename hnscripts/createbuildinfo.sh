@@ -41,6 +41,7 @@ sed -i -e 's/$/\r/' $TFile-status.txt
 # collect config info
 cp .config $TFile.config
 cp .config.init $TFile.config.init
+cp .config.init.r4s $TFile.config.init.r4s
 scripts/diffconfig.sh > $TFile.diffconfig.txt 2>/dev/null
 
 # copy buildroot creation script and patch timestamp info
