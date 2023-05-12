@@ -129,7 +129,7 @@ CONFIG_PACKAGE_luci-app-bcp38=y
 CONFIG_PACKAGE_luci-app-adblock=n
 
 # BanIP package with Luci support, initially disabled
-####CONFIG_PACKAGE_luci-app-banip=y
+CONFIG_PACKAGE_luci-app-banip=y
 
 # nlbwmon app
 CONFIG_PACKAGE_luci-app-nlbwmon=y
@@ -140,7 +140,7 @@ CONFIG_PACKAGE_luci-app-nlbwmon=y
 ## Build and include qosify, if the LLVM toolchain has been downloaded and
 ## extracted to the buildroot before the build config is started.
 ## The file can be downloaded from buildbot snapshot target downloads.
-## https://downloads.openwrt.org/snapshots/targets/ipq806x/generic/llvm-bpf-14.0.6.Linux-x86_64.tar.xz
+## https://downloads.openwrt.org/snapshots/targets/ipq806x/generic/llvm-bpf-15.0.7.Linux-x86_64.tar.xz
 ##
 CONFIG_USE_LLVM_PREBUILT=y
 CONFIG_PACKAGE_qosify=y
