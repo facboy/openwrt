@@ -198,3 +198,6 @@ CONFIG_PACKAGE_kmod-ipt-conntrack-extra=y
 CONFIG_PACKAGE_kmod-ipt-ipset=y
 CONFIG_PACKAGE_kmod-ipt-raw=y
 CONFIG_PACKAGE_kmod-ipt-raw6=y
+
+# for usb tethering
+CONFIG_PACKAGE_kmod-usb-net-rndis=y
