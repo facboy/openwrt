@@ -180,6 +180,7 @@ CONFIG_PACKAGE_knot-host=y
 CONFIG_PACKAGE_openssh-sftp-client=y
 CONFIG_PACKAGE_ddns-scripts-cloudflare=y
 CONFIG_PACKAGE_luci-app-mwan3=y
+CONFIG_PACKAGE_map=y
 
 # enable ccache
 CONFIG_CCACHE=y
