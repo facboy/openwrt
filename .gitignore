@@ -13,7 +13,6 @@
 /logs
 /feeds
 /feeds.conf
-/files
 /target/linux/feeds
 /overlay
 /package/feeds
@@ -23,8 +22,6 @@
 key-build*
 private-key.pem
 public-key.pem
-*.orig
-*.rej
 *~
 .#*
 *#

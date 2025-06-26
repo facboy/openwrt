@@ -1,0 +1,6 @@
+OpenWrt main r30100-143cfd6113 / 2025-06-16 22:30
+---
+openwrt   2025-06-16 143cfd6 ramips: dts: increase maximum MMC clock f
+luci      2025-06-16 fad6b87 luci-app-ltqtapi: drop LUA app
+packages  2025-06-16 cfdf5ff nano: update to 8.5
+routing   2025-05-26 bd56cdc mesh11sd: update to version 5.1.3
