@@ -102,6 +102,7 @@ CONFIG_PACKAGE_luci-theme-openwrt-2020=y
 
 # kernel support for tunnels, VPNs
 CONFIG_PACKAGE_kmod-tun=y
+CONFIG_PACKAGE_kmod-ovpn-dco-v2=y
 
 # wireguard and unetd (new wg-based mesh VPN)
 CONFIG_PACKAGE_luci-proto-wireguard=y
