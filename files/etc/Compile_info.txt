@@ -1,0 +1,6 @@
+OpenWrt main r31007-35ff70e807 / 2025-09-08 21:52
+---
+openwrt   2025-09-08 35ff70e airoha: backport upstream fixes for pinct
+luci      2025-09-08 6c91e30 luci-app-acme: DNS API: Show Options Titl
+packages  2025-09-08 c2c210f sumo: add missing fmt dependency
+routing   2025-09-08 22487dc Merge pull request #1138 from ecsv/batadv
