@@ -1,0 +1,6 @@
+OpenWrt main r35036-db1b70dc98 / 2026-06-23 18:17
+---
+openwrt   2026-06-23 db1b70d qualcommax: ipq807x: Add PCIe support for
+luci      2026-06-23 5a19d95 luci-mod-network: experimental Switch/VLA
+packages  2026-06-23 18e2b7d aardvark-dns: update to 1.17.1
+routing   2026-06-01 6ea029d bird2: bump to v2.19.0

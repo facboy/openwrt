@@ -2,6 +2,7 @@
 # Make dnsmasq reread hostfile by sending SIGHUP signal
 
 initscript=$0
+logger -t odhcpd "*** ODHCPD triggers DNSMASQ reload ***"
 
 . /lib/functions/procd.sh
 
