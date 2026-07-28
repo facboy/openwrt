@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 #
 # createbuildinfo  -  Create info on current config and source code changes
 
@@ -14,49 +14,64 @@ getGitInfo() {
  )
 }
 
-BinDir=$PWD/bin/targets/rockchip/armv8
-Device=R4S
-Prefix=openwrt-rockchip-armv8-friendlyarm_nanopi-r4s
+BinDir=$PWD/bin/targets/qualcommax/ipq807x/
 Branch=main
 
 VersTime=$Branch-$(scripts/getver.sh)-$(date +%Y%m%d-%H%M)
-TFile=$BinDir/$Device-$VersTime
+Pwd="$(pwd)"
+Manifest="openwrt-qualcommax-ipq807x.manifest"
 
-echo process $Branch...
+createBuildInfo() {
+  if [[ $# -eq 0 ]]; then
+    >&2 echo "createBuildInfo needs 2 args, got $@"
+    exit 1
+  fi
 
-# cleanup old binaries & patches
-rm -f $BinDir/$Device-* $BinDir/ath10k-*
+  cd "${Pwd}"
 
-# remove unnecessary files
-rm -f $BinDir/*root.img $BinDir/*vmlinux.elf $BinDir/*initramfs-uImage
+  Device="$1"
+  Prefix="$2"
 
-# create status info and patches
-echo "$VersTime" > $TFile-status.txt
-getGitInfo . $TFile-openwrt.patch $TFile-status.txt
-getGitInfo feeds/luci $TFile-luci.patch $TFile-status.txt
-getGitInfo feeds/packages $TFile-packages.patch $TFile-status.txt
-#getGitInfo feeds/routing $TFile-routing.patch $TFile-status.txt
-sed -i -e 's/$/\r/' $TFile-status.txt
+  local TFile=$BinDir/$Device-$VersTime
 
-# collect config info
-cp .config $TFile.config
-cp .config.init $TFile.config.init
-cp .config.init.r4s $TFile.config.init.r4s
-scripts/diffconfig.sh > $TFile.diffconfig.txt 2>/dev/null
+  echo process $Branch...
 
-# copy buildroot creation script and patch timestamp info
-cp hnscripts/newBuildroot.sh $TFile-newBuildroot.sh
-sed -i "s/^FILESTAMP=.*/FILESTAMP=$Device-$VersTime/" $TFile-newBuildroot.sh
+  # cleanup old binaries & patches
+  rm -f $BinDir/$Device-*
 
-# cleanup checksum files
-grep -sh $Prefix.*-squashfs $BinDir/md5sums $BinDir/sha256sums \
-  | sed -e 's/$/\r/' -e 's/\*'$Prefix'/'$Device'/' -e 's/squashfs-//' \
-  > $TFile-checksums.txt
-rm -f $BinDir/md5sums $BinDir/sha256sums
+  # remove unnecessary files
+  rm -f $BinDir/*root.img $BinDir/*vmlinux.elf $BinDir/*initramfs-uImage $BinDir/*initramfs-uImage.itb
 
-# rename manifest and firmware files
-cd $BinDir
-mv *.manifest $Device-$VersTime-manifest.txt
-mv $Prefix-squashfs-sysupgrade.img.gz $Device-$VersTime-squashfs-sysupgrade.img.gz
-#mv $Prefix-ext4-sysupgrade.img.gz $Device-$VersTime-ext4-sysupgrade.img.gz
-#mv $Prefix-squashfs-factory.img $Device-$VersTime-factory.img
+  # create status info and patches
+  echo "$VersTime" > $TFile-status.txt
+  getGitInfo . $TFile-openwrt.patch $TFile-status.txt
+  getGitInfo feeds/luci $TFile-luci.patch $TFile-status.txt
+  getGitInfo feeds/packages $TFile-packages.patch $TFile-status.txt
+  #getGitInfo feeds/routing $TFile-routing.patch $TFile-status.txt
+  sed -i -e 's/$/\r/' $TFile-status.txt
+
+  # collect config info
+  cp .config $TFile.config
+  cp config.buildinfo $TFile.config.buildinfo
+  scripts/diffconfig.sh > $TFile.diffconfig.txt 2>/dev/null
+
+  # copy buildroot creation script and patch timestamp info
+  cp hnscripts/newBuildroot.sh $TFile-newBuildroot.sh
+  sed -i "s/^FILESTAMP=.*/FILESTAMP=$Device-$VersTime/" $TFile-newBuildroot.sh
+
+  # cleanup checksum files
+  grep -sh $Prefix.*-squashfs $BinDir/md5sums $BinDir/sha256sums \
+    | sed -e 's/$/\r/' -e 's/\*'$Prefix'/'$Device'/' -e 's/squashfs-//' \
+    > $TFile-checksums.txt
+  rm -f $BinDir/md5sums $BinDir/sha256sums
+
+  # rename manifest and firmware files
+  cd $BinDir
+  cp "${Manifest}" $Device-$VersTime-manifest.txt
+  mv $Prefix-squashfs-sysupgrade.bin $Device-$VersTime-sysupgrade.bin
+  mv $Prefix-squashfs-factory.chk $Device-$VersTime-factory.chk
+  mv $Prefix-squashfs-factory.ubi $Device-$VersTime-factory.ubi
+}
+
+createBuildInfo "RBR750" "openwrt-qualcommax-ipq807x-netgear_rbr750"
+createBuildInfo "RBS750" "openwrt-qualcommax-ipq807x-netgear_rbs750"
